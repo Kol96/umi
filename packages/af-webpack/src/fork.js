@@ -2,13 +2,14 @@ import { fork } from 'child_process';
 import send, { RESTART } from './send';
 
 const usedPorts = [];
-let CURRENT_PORT = undefined;
+let CURRENT_PORT;
 
 export default function start(scriptPath, opts = {}) {
   const { onMessage } = opts;
   const execArgv = process.execArgv.slice(0);
   const inspectArgvIndex = execArgv.findIndex(argv => argv.includes('--inspect-brk'));
 
+  // 分配inspect-brk不重复的端口
   if (inspectArgvIndex > -1) {
     const inspectArgv = execArgv[inspectArgvIndex];
     execArgv.splice(

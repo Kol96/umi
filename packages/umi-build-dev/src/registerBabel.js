@@ -17,6 +17,7 @@ export function addBabelRegisterFiles(extraFiles, { cwd }) {
 }
 
 export default function({ cwd }) {
+  // 获取umi用户配置文件
   initFiles(cwd);
   const only = files.map(f => {
     const fullPath = isAbsolute(f) ? f : join(cwd, f);
@@ -28,6 +29,7 @@ export default function({ cwd }) {
     absSrcPath = cwd;
   }
 
+  // 调用af-webpack的registerBabel 与umi-core的方法类似
   registerBabel({
     // only suport glob
     // ref: https://babeljs.io/docs/en/next/babel-core.html#configitem-type

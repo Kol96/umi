@@ -11,6 +11,7 @@ interface IOpts {
   onError?: Function;
 }
 
+// 只允许有一份配置文件
 export function getConfigFile(cwd) {
   const files = process.env.UMI_CONFIG_FILE
     ? process.env.UMI_CONFIG_FILE.split(',').filter(v => v && v.trim())
@@ -94,6 +95,7 @@ export function cleanConfigRequireCache(cwd) {
   });
 }
 
+// 整合用户配置文件
 export default function(opts: IOpts = {}): IConfig {
   const { cwd, defaultConfig } = opts;
   const absConfigFile = getConfigFile(cwd);

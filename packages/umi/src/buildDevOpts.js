@@ -3,8 +3,9 @@ import isWindows from 'is-windows';
 import { winPath, loadDotEnv } from 'umi-utils';
 
 export default function(opts = {}) {
-  loadEnv();
+  loadEnv(); // 加载环境变量
 
+  // cwd设置方式 命令参数--cwd=xx  环境变量APP_ROOT=xx 默认cwd
   let cwd = opts.cwd || process.env.APP_ROOT || process.cwd();
   if (cwd) {
     if (!isAbsolute(cwd)) {
@@ -25,6 +26,7 @@ export default function(opts = {}) {
 function loadEnv() {
   const basePath = join(process.cwd(), '.env');
   const localPath = `${basePath}.local`;
-  loadDotEnv(localPath);
-  loadDotEnv(basePath);
+  // 先加载的优先级高
+  loadDotEnv(localPath); // .env.local
+  loadDotEnv(basePath); // .env
 }

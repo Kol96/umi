@@ -18,6 +18,7 @@ function hasFiles(cwd, files) {
 }
 
 export default function(cwd) {
+  // 使用babel处理.umirc.js、config/config.js的文件
   registerBabel(cwd);
   const config = getUserConfig({ cwd });
 

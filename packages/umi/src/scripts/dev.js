@@ -6,7 +6,7 @@ import isUmiUIEnable from '../isUmiUIEnable';
 
 (async () => {
   const args = yParser(process.argv.slice(2));
-  const opts = buildDevOpts(args);
+  const opts = buildDevOpts(args); // 加载环境变量和生成cwd
 
   let umiui;
 
@@ -47,6 +47,7 @@ import isUmiUIEnable from '../isUmiUIEnable';
 
   child.on('message', data => {
     if (process.send) {
+      // 发消息给可能存在的父进程
       process.send(data);
     }
   });
@@ -57,6 +58,7 @@ import isUmiUIEnable from '../isUmiUIEnable';
     process.exit();
   });
 
+  // ctrl + c 退出
   process.on('SIGINT', () => {
     child.kill('SIGINT');
     killUmiUI();

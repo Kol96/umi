@@ -4,6 +4,7 @@ import signale from 'signale';
 import semver from 'semver';
 import buildDevOpts from './buildDevOpts';
 
+// 获取umi命令
 const script = process.argv[2];
 const args = yParser(process.argv.slice(3));
 
@@ -31,7 +32,7 @@ const aliasMap = {
 
 switch (script) {
   case 'build':
-  case 'dev':
+  case 'dev': // development模式
   case 'test':
   case 'inspect':
   case 'ui':
@@ -39,6 +40,7 @@ switch (script) {
     require(`./scripts/${script}`);
     break;
   default: {
+    // 查版本和命令
     const Service = require('umi-build-dev/lib/Service').default;
     new Service(buildDevOpts(args)).run(aliasMap[script] || script, args);
     break;

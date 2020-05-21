@@ -11,6 +11,7 @@ export default function loadDotEnv(envPath: string): void {
     Object.keys(parsed).forEach(key => {
       // eslint-disable-next-line no-prototype-builtins
       if (!process.env.hasOwnProperty(key)) {
+        // 已存在的环境变量不会重复赋值
         process.env[key] = parsed[key];
       }
     });

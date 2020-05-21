@@ -20,6 +20,7 @@ const debug = require('debug')('umi-build-dev:Service');
 export default class Service {
   constructor({ cwd }) {
     //  用户传入的 cmd 不可信任 转化一下
+    // packages/umi/src/buildDevOpts
     this.cwd = cwd || process.cwd();
 
     try {
@@ -28,6 +29,7 @@ export default class Service {
       this.pkg = {};
     }
 
+    // af-webpack的babel register
     registerBabel({
       cwd: this.cwd,
     });

@@ -2,6 +2,7 @@
 
 const resolveCwd = require('resolve-cwd');
 
+// 如果执行命令目录下有umi就使用那个版本的umi
 const localCLI = resolveCwd.silent('umi/bin/umi');
 if (
   process.argv[2] !== 'ui' &&
