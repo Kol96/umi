@@ -33,6 +33,7 @@ export default function(opts: IOpts) {
   const absPagesPath = join(cwd, pagesPath);
   const absSrcPath = join(absPagesPath, '../');
 
+  // umi临时文件位置
   const envAffix = process.env.NODE_ENV === 'development' ? '' : `-production`;
   const tmpDirPath = process.env.UMI_TEMP_DIR
     ? `${process.env.UMI_TEMP_DIR}${envAffix}`

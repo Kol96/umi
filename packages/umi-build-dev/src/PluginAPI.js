@@ -30,6 +30,7 @@ export default class PluginAPI {
       EVENT: Symbol('event'),
     };
 
+    // 每注册一个插件 都会重新注册插件方法
     this._addMethods();
 
     // bind this
@@ -127,6 +128,7 @@ export default class PluginAPI {
       if (Array.isArray(method)) {
         this.registerMethod(...method);
       } else {
+        // 根据前缀区分不同的API类型
         let type;
         const isPrivate = method.charAt(0) === '_';
         const slicedMethod = isPrivate ? method.slice(1) : method;
@@ -200,6 +202,7 @@ export default class PluginAPI {
     assert(!(type && apply), `Only be one for type and apply.`);
     assert(type || apply, `One of type and apply must supplied.`);
 
+    // 将方法存到pluginMethods中 umi插件中每调用一次就会注册一个插件hook 之后通过applyPlugin触发所有hook
     this.service.pluginMethods[name] = (...args) => {
       if (apply) {
         this.register(name, opts => {

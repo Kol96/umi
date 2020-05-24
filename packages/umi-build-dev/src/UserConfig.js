@@ -42,6 +42,7 @@ class UserConfig {
       .map(key => {
         return map[key].default;
       });
+    // 获取每个config配置项定义
     plugins = this.service.applyPlugins('_registerConfig', {
       initialValue: plugins,
     });
@@ -55,6 +56,7 @@ class UserConfig {
   getConfig(opts = {}) {
     const { paths, cwd } = this.service;
     const { force, setConfig } = opts;
+    // 通过modifyDefaultConfig设置默认config  只有mountElementId配了默认root
     const defaultConfig = this.service.applyPlugins('modifyDefaultConfig', {
       initialValue: {},
     });

@@ -76,6 +76,7 @@ function pluginToPath(plugins, { cwd }) {
     try {
       return [
         winPath(
+          // 插件路径相对于cwd
           resolve.sync(path, {
             basedir: cwd,
           }),
@@ -96,7 +97,10 @@ function getUserPlugins(plugins, { cwd }) {
 
   // 用户给的插件需要做 babel 转换
   if (pluginPaths.length) {
-    addBabelRegisterFiles(pluginPaths.map(p => p[0]), { cwd });
+    addBabelRegisterFiles(
+      pluginPaths.map(p => p[0]),
+      { cwd },
+    );
     registerBabel({
       cwd,
     });

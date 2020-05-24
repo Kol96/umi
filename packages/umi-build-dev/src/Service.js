@@ -40,7 +40,7 @@ export default class Service {
     this.generators = {};
     this.UmiError = UmiError;
 
-    // resolve user config
+    // 与umi ui的获取配置文件方式一致 但多了NODE_ENV=development的local文件
     this.config = UserConfig.getConfig({
       cwd: this.cwd,
       service: this,
@@ -74,6 +74,7 @@ export default class Service {
           typeof this.config.plugins,
         )}`,
       );
+      // 导入内置插件和用户插件 [{id, apply, opts}]
       return getPlugins({
         cwd: winPath(this.cwd),
         plugins: this.config.plugins || [],
@@ -101,8 +102,10 @@ plugin must export a function, e.g.
   }
         `.trim(),
       );
+      // 注册插件API  Service.pluginMethods会重复注册
       const api = new Proxy(new PluginAPI(id, this), {
         get: (target, prop) => {
+          // Service.pluginMethods
           if (this.pluginMethods[prop]) {
             return this.pluginMethods[prop];
           }
@@ -135,11 +138,14 @@ plugin must export a function, e.g.
             ].includes(prop)
           ) {
             if (typeof this[prop] === 'function') {
+              // Service的方法
               return this[prop].bind(this);
             } else {
+              // Service的属性
               return this[prop];
             }
           } else {
+            // API的属性和方法
             return target[prop];
           }
         },
@@ -151,6 +157,7 @@ plugin must export a function, e.g.
         );
         plugin.onOptionChange = fn;
       };
+      // 执行插件
       apply(api, opts);
       plugin._api = api;
     } catch (e) {
@@ -171,7 +178,7 @@ ${getCodeFrame(e, { cwd: this.cwd })}
   }
 
   initPlugins() {
-    // Plugin depth
+    // pluginAPI.registerPlugin可以在插件内注册其他插件
     let count = 0;
     const initExtraPlugins = () => {
       if (!this.extraPlugins.length) {
@@ -220,6 +227,7 @@ ${getCodeFrame(e, { cwd: this.cwd })}
     }
   }
 
+  // 使用插件 按顺序调用设置的钩子 返回最终结果
   applyPlugins(key, opts = {}) {
     debug(`apply plugins ${key}`);
     return (this.pluginHooks[key] || []).reduce((memo, { fn }) => {
@@ -253,6 +261,7 @@ ${getCodeFrame(e, { cwd: this.cwd })}
   loadEnv() {
     const basePath = join(this.cwd, '.env');
     const localPath = `${basePath}.local`;
+    // 加载顺序有问题 应该先加载local(优先级高的先加载)
     loadDotEnv(basePath);
     loadDotEnv(localPath);
   }
@@ -344,6 +353,7 @@ ${getCodeFrame(e, { cwd: this.cwd })}
     });
     debug(`run ${name} with args ${JSON.stringify(args)}`);
 
+    // 已通过umi plugin的registerCommand注册
     const command = this.commands[name];
     if (!command) {
       signale.error(`Command ${chalk.underline.cyan(name)} does not exists`);
@@ -368,6 +378,7 @@ ${getCodeFrame(e, { cwd: this.cwd })}
       }
     }
 
+    // 运行command命令
     return fn(args, {
       remoteLog,
     });
