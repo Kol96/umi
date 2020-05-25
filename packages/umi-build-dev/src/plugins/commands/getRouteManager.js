@@ -9,6 +9,7 @@ export default function(service) {
     fetchRoutes() {
       debug('fetch routes');
       const config = service.userConfig.getConfig({ force: true });
+      // modifyRoutes -> 添加404、设置title、exclude routes
       const routes = service.applyPlugins('modifyRoutes', {
         initialValue: getRouteConfig(paths, config, route => {
           service.applyPlugins('onPatchRoute', {

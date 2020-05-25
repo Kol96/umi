@@ -16,6 +16,7 @@ export default function(service: IApi, opts: IOpts = {}) {
   const { ssr, watch } = opts;
   const { config } = service;
 
+  // 获取af-webpack的配置
   const afWebpackOpts = service.applyPlugins('modifyAFWebpackOpts', {
     initialValue: {
       cwd: service.cwd,
@@ -30,9 +31,11 @@ export default function(service: IApi, opts: IOpts = {}) {
     `chainConfig should not supplied in modifyAFWebpackOpts`,
   );
   afWebpackOpts.chainConfig = webpackConfig => {
+    // 执行插件中的chainWebpackConfig
     service.applyPlugins('chainWebpackConfig', {
       args: webpackConfig,
     });
+    // 执行用户配置文件中的chainWebpack
     if (config.chainWebpack) {
       config.chainWebpack(webpackConfig, {
         webpack: require('af-webpack/webpack'),
@@ -40,7 +43,9 @@ export default function(service: IApi, opts: IOpts = {}) {
     }
   };
 
+  // modifyWebpackConfig后的webpack配置
   const webpackConfig: IWebpack.Configuration = service.applyPlugins('modifyWebpackConfig', {
+    // af-webpack转成webpack-chain配置再输出成webpackConfig
     initialValue: getConfig({
       ...afWebpackOpts,
       ssr,

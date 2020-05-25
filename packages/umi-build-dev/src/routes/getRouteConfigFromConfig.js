@@ -21,10 +21,12 @@ function patchRoute(route, pagesPath, parentRoutePath) {
 
   // route.component start from pages
   if (route.component) {
+    // 解析路由组件路径
     route.component = resolveComponent(pagesPath, route.component);
   }
 
   // path patch must be before bigfish patch
+  // 解析路由路径为绝对路径
   if (route.path && route.path.charAt(0) !== '/') {
     if (isUrl(route.path)) {
       route.path = winPath(route.path);

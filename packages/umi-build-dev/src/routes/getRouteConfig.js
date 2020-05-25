@@ -17,6 +17,7 @@ export default (paths, config = {}, onPatchRoute) => {
     routes = getRouteConfigFromDir(paths);
   }
 
+  // redirect提前 404 .html 权限路由
   patchRoutes(
     routes,
     config,
