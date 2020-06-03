@@ -30,6 +30,7 @@ export default function(api) {
     async (args = {}) => {
       notify.onDevStart({ name: 'umi', version: 2 });
 
+      // 解析路由
       const RoutesManager = getRouteManager(service);
       RoutesManager.fetchRoutes();
 
@@ -38,6 +39,7 @@ export default function(api) {
         hasUIArg = true;
       }
 
+      // 获取启动端口
       const port = await getPort(portFromArgs);
       service.port = port;
 
@@ -47,6 +49,7 @@ export default function(api) {
         service
           ._applyPluginsAsync('onStartAsync')
           .then(() => {
+            // 在.umi下根据模板生成文件 router entry history 等
             const filesGenerator = getFilesGenerator(service, {
               RoutesManager,
               mountElementId: config.mountElementId,
@@ -72,6 +75,7 @@ export default function(api) {
               unwatch();
               filesGenerator.unwatch();
               server.close();
+              // 通知父进程 afwebpack的fork的restart
               process.send({ type: 'RESTART' });
             };
             service.refreshBrowser = () => {
@@ -98,9 +102,9 @@ export default function(api) {
             };
 
             function startWatch() {
-              filesGenerator.watch();
+              filesGenerator.watch(); // 监听entry dva history layout app 等等 重新构建相关文件
               service.userConfig.setConfig(service.config);
-              service.userConfig.watchWithDevServer();
+              service.userConfig.watchWithDevServer(); // 监听配置文件 重启进程
             }
 
             service
