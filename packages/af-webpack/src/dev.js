@@ -24,6 +24,7 @@ function getWebpackConfig(webpackConfig) {
   return Array.isArray(webpackConfig) ? webpackConfig[0] : webpackConfig;
 }
 
+// webpack编译 + devserver
 export default function dev({
   webpackConfig,
   _beforeServerWithApp,
@@ -58,6 +59,7 @@ export default function dev({
   const SILENT = !!process.env.SILENT;
   const urls = prepareUrls(PROTOCOL, HOST, port, base, history);
 
+  // 编译结束后判断成功与否
   compiler.hooks.done.tap('af-webpack done', stats => {
     if (stats.hasErrors()) {
       // make sound
